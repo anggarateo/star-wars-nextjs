@@ -52,7 +52,7 @@ export default function Title(
 			{
 				isFilter &&
 				<Input
-					className="w-fit"
+					className="w-full sm:w-fit"
 					value={search}
 					type="search"
 					placeholder={`Search ${placeholderFilter}...`}

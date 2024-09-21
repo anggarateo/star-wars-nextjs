@@ -11,3 +11,26 @@ body {
     text-wrap: balance;
   }
 }
+
+/* 
+  scrollbar
+ */
+*::-webkit-scrollbar {
+  border-bottom-right-radius: 16px;
+  height: 8px;
+  width: 8px;               /* width of the entire scrollbar */
+  /* background: whitesmoke;       color of the tracking area */
+}
+*::-webkit-scrollbar-track {
+  border-radius: 2px;       /* roundness of the scroll thumb */
+  /* background: whitesmoke;        color of the tracking area */
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(251 146 60); /* rgb(41 83 161);    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+}
+/* 
+  scrollbar
+ */

@@ -41,7 +41,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Providers>
           <Header />
-          <main className="p-4 pb-20 sm:pb-0 min-h-[calc(100vh-64px)] dark:text-gray-200">
+          <main className="p-4 pb-20 sm:pb-4 min-h-[calc(100vh-64px)] dark:text-gray-200">
             {children}
           </main>
         </Providers>
