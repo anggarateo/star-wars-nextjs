@@ -3,7 +3,7 @@
 ## API
 [https://graphql.org/swapi-graphql/](https://graphql.org/swapi-graphql/)
 ## Demo
-[https://start-wars-nextjs.vercel.app/](https://start-wars-nextjs.vercel.app/)
+[https://star-wars-nextjs.vercel.app/](https://star-wars-nextjs.vercel.app/)
 
 ## Requirement
 
