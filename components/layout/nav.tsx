@@ -11,14 +11,14 @@ import { useEffect, useState } from "react";
 
 export default function Nav() {
 	const pathname = usePathname()
-  const [mounted, setMounted] = useState(false)
-  const { theme, setTheme } = useTheme()
+    const [mounted, setMounted] = useState(false)
+    const { theme, setTheme } = useTheme()
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
-  if (!mounted) return null
+    if (!mounted) return null
 
 	return (
 		<nav className="flex items-center gap-4 fixed bottom-0 sm:sticky sm:top-0 bg-white dark:bg-gray-800 w-full sm:w-max justify-around p-2 shadow-inner sm:shadow-none">
@@ -32,13 +32,11 @@ export default function Nav() {
 						p-2 flex flex-col items-center
 					`}
 				>
-          <div
-            className="sm:hidden"
-          >
-            <FontAwesomeIcon
-              icon={el.icon}
-            />
-          </div>
+                    <div
+                        className="sm:hidden"
+                    >
+                        <FontAwesomeIcon icon={el.icon} />
+                    </div>
 
 					<h1 className="text-xs sm:text-base">
 						{el.name}
@@ -46,16 +44,16 @@ export default function Nav() {
 				</Link>
 			))}
 
-      <Button
-        title={theme}
-        isIconOnly
-        variant="light"
-      >
-        <FontAwesomeIcon
-          icon={theme === 'dark' ? faMoon : faSun}
-          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-        />
-      </Button>
+            <Button
+                title={theme}
+                isIconOnly
+                variant="light"
+            >
+                <FontAwesomeIcon
+                    icon={theme === 'dark' ? faMoon : faSun}
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                />
+            </Button>
 		</nav>
 	)
 }

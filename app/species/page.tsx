@@ -1,10 +1,14 @@
 import { Metadata } from "next";
-import DetailCharacter from "./detail";
+import Species from "./species";
 
 export const metadata: Metadata = {
-	title: 'Detail Character'
+	title: 'All Species'
 }
 
 export default function Page() {
-	return <DetailCharacter />
+	return (
+		<section>
+			<Species />
+		</section>
+	)
 }

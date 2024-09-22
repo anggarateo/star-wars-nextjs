@@ -7,20 +7,21 @@ import film from "@/utils/query/film";
 import type { Film } from "@/utils/types";
 import { Card, CardBody, CardFooter, CardHeader, Chip, Divider, Spinner } from "@nextui-org/react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function Film() {
 	const [search, setSearch] = useState('')
 	const [isLoading, setLoading] = useState(true)
 	const [data, setData] = useState<Film[]>([])
-	const [pagination, setPagination] = useState({
+	const [pagination] = useState({
 		first: 6,
 		after: ''
 	})
 	const [hasMore, setHasMore] = useState(false)
-	const loaderRef = useRef(null)
 
-	const getFilms = async () => {
+	async function getFilms() {
 		setLoading(true)
 
 		const {
@@ -34,23 +35,14 @@ export default function Film() {
 			pagination.after = result.allFilms.pageInfo.endCursor
 		}
 
-		if (errors) errors.map((el: { message: string }) => alert(el.message))
+		if (errors) errors.map((el: { message: string }) => toast.error(el.message))
 
 		setLoading(false)
 	}
 
 	useEffect(() => {
 		getFilms()
-	}, [])
-
-	useEffect(() => {
-		const observer = new IntersectionObserver((entries) => {
-			const target = entries[0]
-			if (target.isIntersecting && hasMore) getFilms()
-		})
-
-		if (loaderRef.current) observer.observe(loaderRef.current)
-	}, [getFilms])
+	}, []) // eslint-disable-line
 
 	return (
 		<Card>
@@ -65,69 +57,77 @@ export default function Film() {
 
 			<Divider />
 
-			<CardBody className="grid sm:grid-cols-3 gap-4">
-				{
-					isLoading && !pagination.after
-						? <SKeleton />
-						: <>{
-							data.filter(el => el.title.toLowerCase().includes(search.toLowerCase())).map(film => (
-								<Link
-									key={film.id}
-									href={`/films/${film.id}`}
-									className="h-full"
+			<CardBody>
+				{isLoading && !pagination.after
+					? <div className="grid sm:grid-cols-3 gap-4">
+						<SKeleton />
+					</div>
+					: <InfiniteScroll
+						dataLength={data.length}
+						next={getFilms}
+						hasMore={hasMore}
+						loader={data.filter(el => el.title.toLowerCase().includes(search.toLowerCase())).length > 0
+						&& <div className="flex justify-center items-center">
+							<Spinner color="default" />
+						</div>}
+						className="grid sm:grid-cols-3 gap-4"
+						style={{ overflowY: 'hidden' }}
+					>
+						{data.filter(el => el.title.toLowerCase().includes(search.toLowerCase())).map(film => (
+							<Link
+								key={film.id}
+								href={`/films/${film.id}`}
+								className="h-full"
+							>
+								<Card
+									isPressable
+									shadow="lg"
+									className="border border-divider h-full"
 								>
-									<Card
-										isPressable
-										shadow="lg"
-										className="border border-divider h-full"
-									>
-										<CardHeader>
-											<h1 className="text-lg font-semibold">
-												{film.title}
-											</h1>
-										</CardHeader>
-	
-										<Divider />
-	
-										<CardBody>
-											<p className="line-clamp-3">
-												{film.openingCrawl}
-											</p>
-										</CardBody>
-	
-										<Divider />
-	
-										<CardFooter className="flex flex-col items-start text-sm">
-											<h1>
-												Director: {film.director &&
-													<Chip
-														variant="faded"
-														className="m-1"
-													>
-														{film.director}
-													</Chip>
-												}
-											</h1>
-	
-											<h1 className="text-start">
-												Producer: {film.producers?.map((el, i) => (
-													<Chip
-														key={el + i}
-														variant="faded"
-														className="m-1"
-													>
-														{el}
-													</Chip>
-												))}
-											</h1>
-										</CardFooter>
-									</Card>
-								</Link>
-							))}
-							<div ref={loaderRef} className="flex justify-center items-center">
-								{hasMore && <Spinner color="default" />}
-							</div>
-						</>
+									<CardHeader>
+										<h1 className="text-lg font-semibold">
+											{film.title}
+										</h1>
+									</CardHeader>
+
+									<Divider />
+
+									<CardBody>
+										<p className="line-clamp-3">
+											{film.openingCrawl}
+										</p>
+									</CardBody>
+
+									<Divider />
+
+									<CardFooter className="flex flex-col items-start text-sm">
+										<h1>
+											Director: {film.director &&
+												<Chip
+													variant="faded"
+													className="m-1"
+												>
+													{film.director}
+												</Chip>
+											}
+										</h1>
+
+										<h1 className="text-start">
+											Producer: {film.producers?.map((el, i) => (
+												<Chip
+													key={el + i}
+													variant="faded"
+													className="m-1"
+												>
+													{el}
+												</Chip>
+											))}
+										</h1>
+									</CardFooter>
+								</Card>
+							</Link>
+						))}
+					</InfiniteScroll>
 				}
 			</CardBody>
 		</Card>

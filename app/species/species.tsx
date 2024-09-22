@@ -3,37 +3,36 @@
 import SKeleton from "@/components/reuse/skeleton";
 import Title from "@/components/reuse/title";
 import { getData } from "@/lib/data";
-import birthYear from "@/utils/birthYear";
-import character from "@/utils/query/character";
-import type { Character } from "@/utils/types";
+import species from "@/utils/query/species";
+import type { Species } from "@/utils/types";
 import { Card, CardBody, CardHeader, Divider, Spinner } from "@nextui-org/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-export default function Character() {
+export default function Species() {
 	const [search, setSearch] = useState('')
 	const [isLoading, setLoading] = useState(true)
-	const [data, setData] = useState<Character[]>([])
+	const [data, setData] = useState<Species[]>([])
 	const [pagination] = useState({
 		first: 6,
 		after: ''
 	})
 	const [hasMore, setHasMore] = useState(false)
 
-	async function getCharacters() {
+	async function getSpecies() {
 		setLoading(true)
 
 		const {
 			data: result,
 			errors
-		} = await getData(character.allCharacters(pagination))
+		} = await getData(species.allSpecies(pagination))
 
 		if (result) {
-			setHasMore(result.allPeople.pageInfo.hasNextPage)
-			setData([...data, ...result.allPeople.people])
-			pagination.after = result.allPeople.pageInfo.endCursor
+			setHasMore(result.allSpecies.pageInfo.hasNextPage)
+			setData([...data, ...result.allSpecies.species])
+			pagination.after = result.allSpecies.pageInfo.endCursor
 		}
 
 		if (errors) errors.map((el: { message: string }) => toast.error(el.message))
@@ -42,14 +41,14 @@ export default function Character() {
 	}
 
 	useEffect(() => {
-		getCharacters()
+		getSpecies()
 	}, []) // eslint-disable-line
 
 	return (
 		<Card>
 			<CardHeader className="p-4">
 				<Title
-					label="All Characters"
+					label="All Species"
 					isFilter
 					placeholderFilter="name"
 					onSearch={(val: string) => setSearch(val)}
@@ -65,7 +64,7 @@ export default function Character() {
 					</div>
 					: <InfiniteScroll
 						dataLength={data.length}
-						next={getCharacters}
+						next={getSpecies}
 						hasMore={hasMore}
 						loader={data.filter(el => el.name.toLowerCase().includes(search.toLowerCase())).length > 0
 						&& <div className="flex justify-center items-center">
@@ -74,10 +73,10 @@ export default function Character() {
 						className="grid sm:grid-cols-3 gap-4"
 						style={{ overflowY: 'hidden' }}
 					>
-						{data.filter(el => el.name.toLowerCase().includes(search.toLowerCase())).map(character => (
+						{data.filter(el => el.name.toLowerCase().includes(search.toLowerCase())).map(species => (
 							<Link
-								key={character.id}
-								href={`/characters/${character.id}`}
+								key={species.id}
+								href={`/species/${species.id}`}
 								className="h-full w-full"
 							>
 								<Card
@@ -87,70 +86,60 @@ export default function Character() {
 								>
 									<CardHeader>
 										<h1 className="text-lg font-semibold">
-											{character.name}
+											{species.name}
 										</h1>
 									</CardHeader>
 
 									<Divider />
 
-									<CardBody>
+									<CardBody className="capitalize space-y-1">
 										<div className="flex">
-											<h1 className="w-1/2 sm:w-1/3">
-												Birth Year
+											<h1 className="w-3/4">
+												Classification
 											</h1>
 
 											<h1 className="w-full font-semibold">
-												{birthYear(character.birthYear)}
+												{species.classification}
 											</h1>
 										</div>
 
 										<div className="flex">
-											<h1 className="w-1/2 sm:w-1/3">
-												Gender
+											<h1 className="w-3/4">
+												Designation
 											</h1>
 
 											<h1 className="w-full font-semibold">
-												{character.gender}
+												{species.designation}
 											</h1>
 										</div>
 
 										<div className="flex">
-											<h1 className="w-1/2 sm:w-1/3">
-												Mass
+											<h1 className="w-3/4">
+												Average Height
 											</h1>
 
 											<h1 className="w-full font-semibold">
-												{character.mass ? `${character.mass} kg` : ''}
+												{species.averageHeight ? `${species.averageHeight} cm` : ''}
 											</h1>
 										</div>
 
 										<div className="flex">
-											<h1 className="w-1/2 sm:w-1/3">
-												Height
+											<h1 className="w-3/4">
+												Average Lifespan
 											</h1>
 
 											<h1 className="w-full font-semibold">
-												{character.height ? `${character.height} cm` : ''}
+												{species.averageLifespan ? `${species.averageLifespan} years` : ''}
 											</h1>
 										</div>
 
 										<div className="flex">
-											<h1 className="w-1/2 sm:w-1/3">
-												Species
+											<h1 className="w-3/4">
+												Language
 											</h1>
 
 											<h1 className="w-full font-semibold">
-												{character.species?.name}
-											</h1>
-										</div>
-
-										<div className="flex">
-											<h1 className="w-1/2 sm:w-1/3">
-												Planet
-											</h1>
-
-											<h1 className="w-full font-semibold">
-												{character.homeworld?.name}
+												{species.language}
 											</h1>
 										</div>
 									</CardBody>

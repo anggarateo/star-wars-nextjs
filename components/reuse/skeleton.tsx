@@ -11,14 +11,12 @@ export default function SKeleton(
 ) {
     return (
         <>
-            {
-                new Array(count).fill(0).map((el, i) => (
-                    <Skeleton
-                        key={el + i}
-                        className={`${height} rounded-lg`}
-                    />
-                ))
-            }
+            {new Array(count).fill(0).map((el, i) => (
+                <Skeleton
+                    key={el + i}
+                    className={`${height} rounded-lg`}
+                />
+            ))}
         </>
     )
 }
